@@ -14,4 +14,4 @@ class TeamPolicy
     {
         return $team->members()->where('user_id', $user->id)->exists();
     }
-} 
+}

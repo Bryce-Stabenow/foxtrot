@@ -53,7 +53,7 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($user) {
-            $user->avatar_url = 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($user->email))) . '?s=48&d=identicon';
+            $user->avatar_url = 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($user->email))).'?s=48&d=identicon';
         });
     }
 

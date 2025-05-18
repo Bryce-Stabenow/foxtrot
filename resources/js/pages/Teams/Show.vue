@@ -28,7 +28,7 @@ const currentUser = computed(() => page.props.auth.user);
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Teams',
-        href: '/dashboard',
+        href: '/teams',
     },
     {
         title: 'Team Details',
@@ -47,21 +47,38 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <CardTitle>{{ team.name }}</CardTitle>
                     <CardDescription>{{ team.members.length }} members</CardDescription>
                 </CardHeader>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Team Members</CardTitle>
+                    <CardDescription>A list of all members in this team</CardDescription>
+                </CardHeader>
                 <CardContent>
-                    <div class="flex flex-wrap gap-2">
+                    <div class="divide-y">
                         <div 
                             v-for="user in team.members" 
-                            :key="user.id" 
-                            class="flex items-center gap-2 rounded-full px-3 py-1"
-                            :class="user.id === currentUser.id ? 'bg-primary text-primary-foreground font-medium shadow-sm' : 'bg-muted'"
+                            :key="user.id"
+                            class="flex items-center gap-4 py-4 first:pt-0 last:pb-0"
                         >
-                            <Avatar class="size-6">
+                            <Avatar class="size-10">
                                 <AvatarImage :src="user.avatar_url" :alt="user.name" />
-                                <AvatarFallback class="text-xs">
+                                <AvatarFallback class="text-sm">
                                     {{ getInitials(user.name) }}
                                 </AvatarFallback>
                             </Avatar>
-                            <span class="text-sm">{{ user.id === currentUser.id ? 'You' : user.name }}</span>
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium">{{ user.name }}</span>
+                                    <span 
+                                        v-if="user.id === currentUser.id"
+                                        class="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+                                    >
+                                        You
+                                    </span>
+                                </div>
+                                <span class="text-sm text-muted-foreground">{{ user.email }}</span>
+                            </div>
                         </div>
                     </div>
                 </CardContent>

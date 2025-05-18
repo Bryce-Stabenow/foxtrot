@@ -17,4 +17,4 @@ class DashboardController extends Controller
             'teams' => user()->teams()->with('members')->get(),
         ]);
     }
-} 
+}
