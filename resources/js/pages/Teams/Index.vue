@@ -5,6 +5,14 @@
     <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
       <h1 class="text-2xl font-semibold">Teams</h1>
       
+      <div class="flex justify-end">
+        <Button asChild>
+          <Link :href="route('teams.create')">
+            Create Team
+          </Link>
+        </Button>
+      </div>
+
       <div class="grid gap-4 md:grid-cols-2">
         <Link 
           v-for="team in teams" 
@@ -50,6 +58,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { getInitials } from '@/composables/useInitials';
 import { computed } from 'vue';
+import { Button } from '@/components/ui/button';
 
 defineProps<{
   teams: Array<{

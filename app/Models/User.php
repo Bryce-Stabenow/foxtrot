@@ -5,8 +5,10 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Enums\UserType;
 
 class User extends Authenticatable
 {
@@ -23,6 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar_url',
+        'organization_id',
+        'user_type',
     ];
 
     /**
@@ -45,6 +49,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'user_type' => UserType::class,
         ];
     }
 
@@ -65,5 +70,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class, 'team_members')
             ->using(TeamMember::class)
             ->withTimestamps();
+    }
+
+    /**
+     * The organization that the user belongs to.
+     */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
     }
 }
