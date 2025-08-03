@@ -173,30 +173,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { getInitials } from '@/composables/useInitials';
 import { router } from '@inertiajs/vue3';
-
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  avatar_url: string;
-  user_type: 'admin' | 'member';
-  teams: Array<{
-    id: number;
-    name: string;
-  }>;
-}
-
-interface Team {
-  id: number;
-  name: string;
-}
-
-interface CurrentUser {
-  id: number;
-  name: string;
-  email: string;
-  user_type: 'admin' | 'member';
-}
+import { type Member, type Team, type CurrentUser } from '@/types';
 
 const props = defineProps<{
   member: Member;

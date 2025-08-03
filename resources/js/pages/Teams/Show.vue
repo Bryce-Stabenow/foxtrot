@@ -1,29 +1,22 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem, type SharedData } from '@/types';
-import { Head, usePage } from '@inertiajs/vue3';
+import { type BreadcrumbItem, type SharedData, type TeamWithMembers } from '@/types';
+import { UserType } from '@/types/enums';
+import { Head, usePage, router } from '@inertiajs/vue3';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { getInitials } from '@/composables/useInitials';
 import { computed } from 'vue';
 
-interface Team {
-    id: number;
-    name: string;
-    members: Array<{
-        id: number;
-        name: string;
-        email: string;
-        avatar_url: string;
-    }>;
-}
-
 defineProps<{
-    team: Team;
+    team: TeamWithMembers;
 }>();
 
 const page = usePage<SharedData>();
 const currentUser = computed(() => page.props.auth.user);
+
+const isAdmin = computed(() => currentUser.value.user_type === UserType.ADMIN);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -35,6 +28,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '#',
     },
 ];
+
+const viewUserDetails = (userId: number) => {
+    router.visit(route('organization.members.show', { member: userId }));
+};
 </script>
 
 <template>
@@ -67,7 +64,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     {{ getInitials(user.name) }}
                                 </AvatarFallback>
                             </Avatar>
-                            <div class="flex flex-col">
+                            <div class="flex flex-col flex-1">
                                 <div class="flex items-center gap-2">
                                     <span class="font-medium">{{ user.name }}</span>
                                     <span 
@@ -79,6 +76,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </div>
                                 <span class="text-sm text-muted-foreground">{{ user.email }}</span>
                             </div>
+                            <Button 
+                                v-if="isAdmin && user.id !== currentUser.id"
+                                variant="outline" 
+                                size="sm"
+                                @click="viewUserDetails(user.id)"
+                            >
+                                View Details
+                            </Button>
                         </div>
                     </div>
                 </CardContent>

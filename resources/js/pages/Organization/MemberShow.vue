@@ -272,7 +272,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -283,40 +283,13 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import Icon from '@/components/Icon.vue';
 import { getInitials } from '@/composables/useInitials';
-import { type BreadcrumbItem, type SharedData } from '@/types';
-
-// TODO move to types.ts
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  avatar_url: string;
-  user_type: 'admin' | 'member';
-  created_at: string;
-  teams: Array<{
-    id: number;
-    name: string;
-  }>;
-}
-
-interface Team {
-  id: number;
-  name: string;
-}
-
-interface Organization {
-  id: number;
-  name: string;
-}
+import { type BreadcrumbItem, type Member, type Team, type Organization } from '@/types';
 
 const props = defineProps<{
   member: Member;
   teams: Team[];
   organization: Organization;
 }>();
-
-const page = usePage<SharedData>();
-const currentUser = computed(() => page.props.auth.user);
 
 const showAssignModal = ref(false);
 const isLoading = ref(false);

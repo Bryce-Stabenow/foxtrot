@@ -1,25 +1,14 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem, type SharedData } from '@/types';
+import { type BreadcrumbItem, type SharedData, type TeamWithMembers } from '@/types';
 import { Head, usePage, Link } from '@inertiajs/vue3';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/composables/useInitials';
 import { computed } from 'vue';
 
-interface Team {
-    id: number;
-    name: string;
-    members: Array<{
-        id: number;
-        name: string;
-        email: string;
-        avatar_url: string;
-    }>;
-}
-
 defineProps<{
-    teams: Team[];
+    teams: TeamWithMembers[];
 }>();
 
 const page = usePage<SharedData>();

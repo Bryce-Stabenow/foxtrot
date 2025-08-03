@@ -55,37 +55,8 @@ import { Head, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import MemberCard from '@/components/MemberCard.vue';
 import Badge from '@/components/ui/badge/Badge.vue';
-import { type BreadcrumbItem, type SharedData } from '@/types';
+import { type BreadcrumbItem, type SharedData, type Member, type Team, type Organization, type TeamGroup } from '@/types';
 import { computed } from 'vue';
-
-// TODO move to types.ts
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  avatar_url: string;
-  user_type: 'admin' | 'member'; // TODO: use UserType enum
-  teams: Array<{
-    id: number;
-    name: string;
-  }>;
-}
-
-interface Team {
-  id: number;
-  name: string;
-}
-
-interface Organization {
-  id: number;
-  name: string;
-}
-
-interface TeamGroup {
-  teamId: number;
-  teamName: string;
-  members: Member[];
-}
 
 const props = defineProps<{
   members: Member[];

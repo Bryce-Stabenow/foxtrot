@@ -280,23 +280,11 @@ import Label from '@/components/ui/label/Label.vue'
 import InputError from '@/components/InputError.vue'
 import Icon from '@/components/Icon.vue'
 import Toast from '@/components/Toast.vue'
-
-interface Invitation {
-  id: number
-  email: string
-  status: 'pending' | 'accepted' | 'expired'
-  created_at: string
-  expires_at: string
-  invited_by: {
-    name: string
-  }
-  organization: {
-    name: string
-  }
-}
+import { type InvitationWithStatus } from '@/types'
+import { InvitationStatus } from '@/types/enums'
 
 interface Props {
-  invitations: Invitation[]
+  invitations: InvitationWithStatus[]
 }
 
 const props = defineProps<Props>()
@@ -312,15 +300,15 @@ const form = useForm({
 
 // Computed properties to split invitations by status
 const pendingInvitations = computed(() => {
-  return props.invitations.filter(invitation => invitation.status === 'pending')
+  return props.invitations.filter(invitation => invitation.status === InvitationStatus.PENDING)
 })
 
 const acceptedInvitations = computed(() => {
-  return props.invitations.filter(invitation => invitation.status === 'accepted')
+  return props.invitations.filter(invitation => invitation.status === InvitationStatus.ACCEPTED)
 })
 
 const expiredInvitations = computed(() => {
-  return props.invitations.filter(invitation => invitation.status === 'expired')
+  return props.invitations.filter(invitation => invitation.status === InvitationStatus.EXPIRED)
 })
 
 const formatDate = (date: string) => {
@@ -340,7 +328,7 @@ const sendInvitation = () => {
   })
 }
 
-const resendInvitation = (invitation: Invitation) => {
+const resendInvitation = (invitation: InvitationWithStatus) => {
   router.post(route('invitations.resend', invitation.id), {}, {
     onSuccess: () => {
       toastMessage.value = 'Invitation resent successfully!'
@@ -355,13 +343,13 @@ const resendInvitation = (invitation: Invitation) => {
   })
 }
 
-const cancelInvitation = (invitation: Invitation) => {
+const cancelInvitation = (invitation: InvitationWithStatus) => {
   invitationToCancel.value = invitation
   showCancelDialog.value = true
 }
 
 const showCancelDialog = ref(false)
-const invitationToCancel: Ref<Invitation | null> = ref(null)
+const invitationToCancel: Ref<InvitationWithStatus | null> = ref(null)
 const canceling = ref(false)
 
 const confirmCancelInvitation = () => {

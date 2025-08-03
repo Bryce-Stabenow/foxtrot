@@ -109,19 +109,7 @@ import Input from '@/components/ui/input/Input.vue'
 import Label from '@/components/ui/label/Label.vue'
 import InputError from '@/components/InputError.vue'
 import Icon from '@/components/Icon.vue'
-
-interface Invitation {
-  id: number
-  email: string
-  token: string
-  expires_at: string
-  organization: {
-    name: string
-  }
-  invited_by: {
-    name: string
-  }
-}
+import { type Invitation } from '@/types'
 
 interface Props {
   invitation: Invitation
