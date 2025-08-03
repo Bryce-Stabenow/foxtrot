@@ -17,7 +17,7 @@
             <p class="text-muted-foreground">{{ member.email }}</p>
             <div class="flex items-center gap-2 mt-2">
               <Badge 
-                :variant="member.user_type === 'admin' ? 'default' : 'secondary'"
+                :variant="hasAdminPermissions(member.user_type) ? 'default' : 'secondary'"
                 class="text-sm"
               >
                 {{ member.user_type }}
@@ -51,7 +51,20 @@
                 </div>
                 <div>
                   <Label class="text-sm font-medium">Role</Label>
-                  <p class="text-sm text-muted-foreground capitalize">{{ member.user_type }}</p>
+                  <div class="flex items-center gap-2">
+                    <p class="text-sm text-muted-foreground capitalize">{{ member.user_type }}</p>
+                    <Button 
+                      v-if="(member.user_type === 'member') || 
+                            (member.user_type === 'admin' && currentUser?.user_type === 'owner') ||
+                            (member.user_type === 'owner' && currentUser?.user_type === 'owner')"
+                      variant="outline" 
+                      size="sm"
+                      @click="openRoleModal"
+                    >
+                      <Icon name="edit" class="size-3 mr-1" />
+                      Change
+                    </Button>
+                  </div>
                 </div>
                 <div>
                   <Label class="text-sm font-medium">Member Since</Label>
@@ -131,6 +144,14 @@
               <Button 
                 variant="outline" 
                 class="w-full justify-start"
+                @click="openRoleModal"
+              >
+                <Icon name="shield" class="size-4 mr-2" />
+                Change Role
+              </Button>
+              <Button 
+                variant="outline" 
+                class="w-full justify-start"
                 @click="copyEmail"
               >
                 <Icon v-if="!copied" name="mail" class="size-4 mr-2" />
@@ -138,7 +159,7 @@
                 Copy Email
               </Button>
               <Button 
-                v-if="member.teams.length === 0 && member.user_type !== 'admin'"
+                v-if="member.teams.length === 0 && !hasAdminPermissions(member.user_type)"
                 variant="destructive" 
                 class="w-full justify-start"
                 @click="openDeleteModal"
@@ -267,12 +288,101 @@
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- Role Change Modal -->
+    <Dialog :open="showRoleModal" @update:open="showRoleModal = $event">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Change Role for {{ member.name }}</DialogTitle>
+          <DialogDescription>
+            Select a new role for this member. This will change their permissions within the organization.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div class="space-y-4">
+          <div>
+            <Label class="text-sm font-medium mb-2 block">Current Role</Label>
+            <Badge 
+              :variant="hasAdminPermissions(member.user_type) ? 'default' : 'secondary'"
+              class="text-sm"
+            >
+              {{ member.user_type }}
+            </Badge>
+          </div>
+
+          <div>
+            <Label class="text-sm font-medium mb-2 block">New Role</Label>
+            <div class="space-y-2">
+              <label class="flex items-center space-x-2 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="role" 
+                  value="member" 
+                  v-model="selectedRole"
+                  class="rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <div>
+                  <div class="font-medium">Member</div>
+                  <div class="text-sm text-muted-foreground">Can view and participate in teams</div>
+                </div>
+              </label>
+              <label v-if="canChangeToAdmin" class="flex items-center space-x-2 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="role" 
+                  value="admin" 
+                  v-model="selectedRole"
+                  class="rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <div>
+                  <div class="font-medium">Admin</div>
+                  <div class="text-sm text-muted-foreground">Can manage organization, teams, and members</div>
+                </div>
+              </label>
+              <label v-if="canChangeToOwner" class="flex items-center space-x-2 cursor-pointer">
+                <input 
+                  type="radio" 
+                  name="role" 
+                  value="owner" 
+                  v-model="selectedRole"
+                  class="rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <div>
+                  <div class="font-medium">Owner</div>
+                  <div class="text-sm text-muted-foreground">Full access with all admin permissions</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div v-if="selectedRole === 'admin' || selectedRole === 'owner'" class="rounded-lg border border-amber-100 bg-amber-50 p-4 dark:border-amber-200/10 dark:bg-amber-700/10">
+            <div class="relative space-y-0.5 text-amber-600 dark:text-amber-100">
+              <p class="font-medium">Admin Privileges</p>
+              <p class="text-sm">Admins and owners have full access to manage the organization, including adding/removing members and teams.</p>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" @click="showRoleModal = false">
+            Cancel
+          </Button>
+          <Button 
+            variant="default" 
+            @click="updateRole"
+            :disabled="isUpdatingRole || selectedRole === member.user_type"
+          >
+            {{ isUpdatingRole ? 'Updating...' : 'Update Role' }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -283,7 +393,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import Icon from '@/components/Icon.vue';
 import { getInitials } from '@/composables/useInitials';
-import { type BreadcrumbItem, type Member, type Team, type Organization } from '@/types';
+import { type BreadcrumbItem, type Member, type Team, type Organization, type SharedData } from '@/types';
+import { hasAdminPermissions } from '@/lib/utils';
 
 const props = defineProps<{
   member: Member;
@@ -291,11 +402,17 @@ const props = defineProps<{
   organization: Organization;
 }>();
 
+const page = usePage<SharedData>();
+const currentUser = computed(() => page.props.auth.user);
+
 const showAssignModal = ref(false);
 const isLoading = ref(false);
 const showDeleteModal = ref(false);
 const isDeleting = ref(false);
 const copied = ref(false);
+const showRoleModal = ref(false);
+const isUpdatingRole = ref(false);
+const selectedRole = ref(props.member.user_type);
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -315,6 +432,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 const availableTeams = computed(() => {
   const memberTeamIds = props.member.teams.map(team => team.id);
   return props.teams.filter(team => !memberTeamIds.includes(team.id));
+});
+
+// Role hierarchy logic
+const canChangeToAdmin = computed(() => {
+  return currentUser.value?.user_type === 'owner' || 
+         (currentUser.value?.user_type === 'admin' && props.member.user_type !== 'owner');
+});
+
+const canChangeToOwner = computed(() => {
+  return currentUser.value?.user_type === 'owner';
 });
 
 const formatDate = (dateString: string) => {
@@ -386,6 +513,32 @@ const deleteMember = async () => {
     console.error('Failed to delete member:', error);
   } finally {
     isDeleting.value = false;
+  }
+};
+
+const openRoleModal = () => {
+  selectedRole.value = props.member.user_type;
+  showRoleModal.value = true;
+};
+
+const updateRole = async () => {
+  if (selectedRole.value === props.member.user_type) {
+    return;
+  }
+
+  isUpdatingRole.value = true;
+  
+  try {
+    await router.patch(route('organization.members.update-role', {
+      member: props.member.id
+    }), {
+      user_type: selectedRole.value
+    });
+  } catch (error) {
+    console.error('Failed to update member role:', error);
+  } finally {
+    isUpdatingRole.value = false;
+    showRoleModal.value = false;
   }
 };
 </script> 

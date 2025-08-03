@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{member}', [OrganizationMemberController::class, 'show'])->name('show');
         Route::post('/{member}/teams/{team}', [OrganizationMemberController::class, 'assignToTeam'])->name('assign-to-team');
         Route::delete('/{member}/teams/{team}', [OrganizationMemberController::class, 'removeFromTeam'])->name('remove-from-team');
+        Route::patch('/{member}/role', [OrganizationMemberController::class, 'updateRole'])->name('update-role');
         Route::delete('/{member}', [OrganizationMemberController::class, 'destroy'])->name('destroy');
     });
 });

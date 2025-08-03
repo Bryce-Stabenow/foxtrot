@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getInitials } from '@/composables/useInitials';
 import { computed } from 'vue';
+import { hasAdminPermissions } from '@/lib/utils';
 
 defineProps<{
     team: TeamWithMembers;
@@ -16,7 +17,7 @@ defineProps<{
 const page = usePage<SharedData>();
 const currentUser = computed(() => page.props.auth.user);
 
-const isAdmin = computed(() => currentUser.value.user_type === UserType.ADMIN);
+const isAdmin = computed(() => hasAdminPermissions(currentUser.value.user_type));
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

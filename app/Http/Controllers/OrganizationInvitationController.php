@@ -60,7 +60,7 @@ class OrganizationInvitationController extends Controller
 
         // Check if user can resend this invitation
         if ($invitation->organization_id !== $user->organization_id || 
-            $invitation->status !== OrganizationInvitationStatus::PENDING) {
+            $invitation->status === OrganizationInvitationStatus::ACCEPTED) {
             abort(403);
         }
 

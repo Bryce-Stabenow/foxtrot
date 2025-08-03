@@ -2,7 +2,7 @@
 - ~~Invite flow for users~~
 - ~~See all users, which groups they belong to, and assign them to teams~~
 - ~~Delete existing users~~
-- Manage roles for each user and view them
+- ~~Manage roles for each user and view them~~
  - ~~Add view details button to teams page~~
 
 # Schedule check-ins for team members

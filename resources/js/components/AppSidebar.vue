@@ -7,6 +7,7 @@ import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { LayoutGrid, Mail, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { hasAdminPermissions } from '@/lib/utils';
 
 const page = usePage<SharedData>();
 
@@ -19,7 +20,7 @@ const mainNavItems: NavItem[] = [
 ];
 
 // Add invitations link for admin users
-if (page.props.auth.user?.user_type === 'admin') {
+if (page.props.auth.user?.user_type && hasAdminPermissions(page.props.auth.user.user_type)) {
     mainNavItems.push({
         title: 'Invitations',
         href: '/invitations',

@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
                 'email' => 'test@example.com',
                 'password' => Hash::make('2TgvL8VDJkY53KE'),
                 'organization_id' => $organization->id,
-                'user_type' => UserType::ADMIN,
+                'user_type' => UserType::OWNER,
             ]
         );
 
@@ -39,6 +39,18 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('2TgvL8VDJkY53KE'),
                 'organization_id' => $organization->id,
                 'user_type' => UserType::ADMIN,
+            ]
+        );
+
+        // Create owner user
+        User::firstOrCreate(
+            ['email' => 'owner@example.com'],
+            [
+                'name' => 'Owner User',
+                'email' => 'owner@example.com',
+                'password' => Hash::make('2TgvL8VDJkY53KE'),
+                'organization_id' => $organization->id,
+                'user_type' => UserType::OWNER,
             ]
         );
     }

@@ -2,6 +2,7 @@
 export enum UserType {
     ADMIN = 'admin',
     MEMBER = 'member',
+    OWNER = 'owner',
 }
 
 export enum InvitationStatus {

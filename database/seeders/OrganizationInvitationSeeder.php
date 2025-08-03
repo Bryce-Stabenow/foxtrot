@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserType;
 use App\Models\Organization;
 use App\Models\OrganizationInvitation;
 use App\Models\User;
@@ -14,11 +15,11 @@ class OrganizationInvitationSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get existing organizations and users for seeding
-        $organizations = Organization::all();
-        $users = User::all();
+        // Get the Foxtrot organization specifically
+        $organization = Organization::where('name', 'Foxtrot Organization')->first();
+        $users = User::where('organization_id', $organization->id)->get();
 
-        if ($organizations->isEmpty() || $users->isEmpty()) {
+        if (!$organization || $users->isEmpty()) {
             return;
         }
 
@@ -27,8 +28,8 @@ class OrganizationInvitationSeeder extends Seeder
             ->count(5)
             ->pending()
             ->create([
-                'organization_id' => $organizations->random()->id,
-                'invited_by_user_id' => $users->where('user_type', 'admin')->random()->id,
+                'organization_id' => $organization->id,
+                'invited_by_user_id' => $users->whereIn('user_type', [UserType::ADMIN, UserType::OWNER])->random()->id,
             ]);
 
         // Create accepted invitations
@@ -36,8 +37,8 @@ class OrganizationInvitationSeeder extends Seeder
             ->count(3)
             ->accepted()
             ->create([
-                'organization_id' => $organizations->random()->id,
-                'invited_by_user_id' => $users->where('user_type', 'admin')->random()->id,
+                'organization_id' => $organization->id,
+                'invited_by_user_id' => $users->whereIn('user_type', [UserType::ADMIN, UserType::OWNER])->random()->id,
             ]);
 
         // Create expired invitations
@@ -45,8 +46,8 @@ class OrganizationInvitationSeeder extends Seeder
             ->count(2)
             ->expired()
             ->create([
-                'organization_id' => $organizations->random()->id,
-                'invited_by_user_id' => $users->where('user_type', 'admin')->random()->id,
+                'organization_id' => $organization->id,
+                'invited_by_user_id' => $users->whereIn('user_type', [UserType::ADMIN, UserType::OWNER])->random()->id,
             ]);
     }
 }

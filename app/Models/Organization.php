@@ -35,11 +35,11 @@ class Organization extends Model
     }
 
     /**
-     * The admin members that belong to the organization.
+     * The admin and owner members that belong to the organization.
      */
     public function admins(): HasMany
     {
-        return $this->hasMany(User::class)->where('user_type', UserType::ADMIN);
+        return $this->hasMany(User::class)->whereIn('user_type', [UserType::ADMIN, UserType::OWNER]);
     }
 
     /**

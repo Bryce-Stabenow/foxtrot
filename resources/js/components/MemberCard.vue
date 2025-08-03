@@ -13,7 +13,7 @@
           <CardDescription class="truncate">{{ member.email }}</CardDescription>
         </div>
         <Badge 
-          :variant="member.user_type === 'admin' ? 'default' : 'secondary'"
+          :variant="hasAdminPermissions(member.user_type) ? 'default' : 'secondary'"
           class="text-xs"
         >
           {{ member.user_type }}
@@ -54,7 +54,7 @@
             Manage Teams
           </Button>
           <Button 
-            v-if="member.teams.length === 0 && member.user_type !== 'admin'"
+            v-if="member.teams.length === 0 && !hasAdminPermissions(member.user_type)"
             variant="destructive" 
             size="sm"
             @click="openDeleteModal"
@@ -174,6 +174,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { getInitials } from '@/composables/useInitials';
 import { router } from '@inertiajs/vue3';
 import { type Member, type Team, type CurrentUser } from '@/types';
+import { hasAdminPermissions } from '@/lib/utils';
 
 const props = defineProps<{
   member: Member;

@@ -18,8 +18,8 @@ class SendInvitationRequest extends FormRequest
     {
         $user = $this->user();
         
-        // Only admins can send invitations
-        if ($user->user_type !== UserType::ADMIN) {
+        // Only admins and owners can send invitations
+        if (!hasAdminPermissions($user)) {
             return false;
         }
 

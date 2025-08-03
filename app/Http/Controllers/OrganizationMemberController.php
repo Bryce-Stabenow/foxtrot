@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Enums\UserType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class OrganizationMemberController extends Controller
@@ -18,9 +19,9 @@ class OrganizationMemberController extends Controller
     {
         $user = $request->user();
         
-        // Ensure user is an admin
-        if ($user->user_type !== UserType::ADMIN) {
-            abort(403, 'Only admins can view organization members.');
+        // Ensure user has admin permissions
+        if (!hasAdminPermissions($user)) {
+            abort(403, 'Only admins and owners can view organization members.');
         }
 
         $organization = $user->organization;
@@ -52,9 +53,9 @@ class OrganizationMemberController extends Controller
     {
         $user = $request->user();
         
-        // Ensure user is an admin
-        if ($user->user_type !== UserType::ADMIN) {
-            abort(403, 'Only admins can view member details.');
+        // Ensure user has admin permissions
+        if (!hasAdminPermissions($user)) {
+            abort(403, 'Only admins and owners can view member details.');
         }
 
         // Ensure admin and member belong to the same organization
@@ -89,9 +90,9 @@ class OrganizationMemberController extends Controller
     {
         $user = $request->user();
         
-        // Ensure user is an admin
-        if ($user->user_type !== UserType::ADMIN) {
-            abort(403, 'Only admins can assign members to teams.');
+        // Ensure user has admin permissions
+        if (!hasAdminPermissions($user)) {
+            abort(403, 'Only admins and owners can assign members to teams.');
         }
 
         // Ensure admin and member belong to the same organization
@@ -116,9 +117,9 @@ class OrganizationMemberController extends Controller
     {
         $user = $request->user();
         
-        // Ensure user is an admin
-        if ($user->user_type !== UserType::ADMIN) {
-            abort(403, 'Only admins can remove members from teams.');
+        // Ensure user has admin permissions
+        if (!hasAdminPermissions($user)) {
+            abort(403, 'Only admins and owners can remove members from teams.');
         }
 
         // Ensure admin and member belong to the same organization
@@ -137,15 +138,60 @@ class OrganizationMemberController extends Controller
     }
 
     /**
+     * Update a member's role.
+     */
+    public function updateRole(Request $request, User $member): RedirectResponse
+    {
+        $user = $request->user();
+        
+        // Ensure user has admin permissions
+        if (!hasAdminPermissions($user)) {
+            abort(403, 'Only admins and owners can update member roles.');
+        }
+
+        // Ensure admin and member belong to the same organization
+        if ($user->organization_id !== $member->organization_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Prevent user from changing their own role
+        if ($user->id === $member->id) {
+            abort(400, 'You cannot change your own role.');
+        }
+
+        $request->validate([
+            'user_type' => ['required', 'string', Rule::enum(UserType::class)],
+        ]);
+
+        $newRole = UserType::from($request->user_type);
+        
+        // Check role hierarchy permissions
+        if ($user->user_type === UserType::ADMIN) {
+            // Admins can only change members to admin/member
+            if ($member->user_type === UserType::OWNER) {
+                abort(403, 'Admins cannot change owner roles.');
+            }
+            if ($newRole === UserType::OWNER) {
+                abort(403, 'Admins cannot promote users to owner.');
+            }
+        }
+
+        // Update the member's role
+        $member->update(['user_type' => $newRole]);
+
+        return back()->with('success', 'Member role updated successfully.');
+    }
+
+    /**
      * Delete a member from the organization.
      */
     public function destroy(Request $request, User $member): RedirectResponse
     {
         $user = $request->user();
         
-        // Ensure user is an admin
-        if ($user->user_type !== UserType::ADMIN) {
-            abort(403, 'Only admins can delete organization members.');
+        // Ensure user has admin permissions
+        if (!hasAdminPermissions($user)) {
+            abort(403, 'Only admins and owners can delete organization members.');
         }
 
         // Ensure admin and member belong to the same organization

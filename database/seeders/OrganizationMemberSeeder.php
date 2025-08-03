@@ -49,6 +49,16 @@ class OrganizationMemberSeeder extends Seeder
                 'email' => 'eva@example.com',
                 'user_type' => UserType::MEMBER,
             ],
+            [
+                'name' => 'Frank Owner',
+                'email' => 'frank@example.com',
+                'user_type' => UserType::OWNER,
+            ],
+            [
+                'name' => 'Grace Admin',
+                'email' => 'grace@example.com',
+                'user_type' => UserType::ADMIN,
+            ],
         ];
 
         foreach ($members as $memberData) {
