@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Mail } from 'lucide-vue-next';
+import { LayoutGrid, Mail, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const page = usePage<SharedData>();
@@ -24,6 +24,12 @@ if (page.props.auth.user?.user_type === 'admin') {
         title: 'Invitations',
         href: '/invitations',
         icon: Mail,
+    });
+    
+    mainNavItems.push({
+        title: 'Members',
+        href: '/organization/members',
+        icon: Users,
     });
 }
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\OrganizationInvitationController;
 use App\Http\Controllers\InvitationAcceptanceController;
+use App\Http\Controllers\OrganizationMemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, 'home'])->name('home');
@@ -25,6 +26,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/', [OrganizationInvitationController::class, 'store'])->name('store');
         Route::post('/{invitation}/resend', [OrganizationInvitationController::class, 'resend'])->name('resend');
         Route::delete('/{invitation}', [OrganizationInvitationController::class, 'destroy'])->name('destroy');
+    });
+
+    // Organization members (admin only)
+    Route::prefix('organization/members')->name('organization.members.')->group(function () {
+        Route::get('/', [OrganizationMemberController::class, 'index'])->name('index');
+        Route::post('/{member}/teams/{team}', [OrganizationMemberController::class, 'assignToTeam'])->name('assign-to-team');
+        Route::delete('/{member}/teams/{team}', [OrganizationMemberController::class, 'removeFromTeam'])->name('remove-from-team');
     });
 });
 

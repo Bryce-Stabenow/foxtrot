@@ -196,7 +196,7 @@
         
         <form @submit.prevent="sendInvitation" class="space-y-4">
           <div>
-            <Label for="email">Email Address</Label>
+            <Label for="email" class="mb-2">Email Address</Label>
             <Input
               id="email"
               v-model="form.email"

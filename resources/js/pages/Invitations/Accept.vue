@@ -1,17 +1,17 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div class="text-center">
         <div class="mx-auto h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
           <Icon name="Mail" class="h-6 w-6 text-blue-600" />
         </div>
-        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+        <h2 class="mt-6 text-3xl font-extrabold">
           Accept Invitation
         </h2>
-        <p class="mt-2 text-sm text-gray-600">
+        <p class="mt-2 text-sm">
           You've been invited to join <span class="font-medium">{{ invitation.organization.name }}</span>
         </p>
-        <p class="text-xs text-gray-500 mt-1">
+        <p class="text-xs mt-1">
           Invited by {{ invitation.invited_by.name }}
         </p>
       </div>
@@ -26,9 +26,8 @@
                 :value="invitation.email"
                 type="email"
                 disabled
-                class="bg-gray-50"
               />
-              <p class="text-xs text-gray-500 mt-1">
+              <p class="text-xs mt-1">
                 This is the email address where you received the invitation.
               </p>
             </div>
@@ -72,10 +71,10 @@
               <InputError v-if="form.errors.password_confirmation" :message="form.errors.password_confirmation" />
             </div>
 
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-300 rounded-lg p-4 my-8">
               <div class="flex">
-                <Icon name="Info" class="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
-                <div class="text-sm text-blue-800">
+                <Icon name="Info" class="h-5 w-5 text-blue-400 dark:text-blue-300 mr-2 mt-0.5" />
+                <div class="text-sm text-blue-800 dark:text-blue-300">
                   <p class="font-medium">About this invitation</p>
                   <p class="mt-1">
                     By accepting this invitation, you'll create an account and automatically join 

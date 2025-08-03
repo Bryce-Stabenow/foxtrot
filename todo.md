@@ -1,5 +1,6 @@
 # Add new members to organization
 - ~~Invite flow for users~~
+- See all users, which groups they belong to, and assign them to teams
 - Delete existing users
 - Roles for organizations
 

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             TeamMemberSeeder::class,
             OrganizationInvitationSeeder::class,
+            OrganizationMemberSeeder::class,
         ]);
     }
 }

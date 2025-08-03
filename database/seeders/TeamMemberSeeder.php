@@ -35,18 +35,17 @@ class TeamMemberSeeder extends Seeder
 
         $testUser = User::where('email', 'test@example.com')->first();
         if ($testUser) {
-            $testUser->teams()->attach($alphaTeam->id);
-            $testUser->teams()->attach($betaTeam->id);
+            $testUser->teams()->syncWithoutDetaching([$alphaTeam->id, $betaTeam->id]);
         }
         
         [$alphaTeamMembers, $betaTeamMembers] = $users->chunk(5);
 
         $alphaTeamMembers->each(function ($user) use ($alphaTeam) {
-            $user->teams()->attach($alphaTeam->id);
+            $user->teams()->syncWithoutDetaching([$alphaTeam->id]);
         });
 
         $betaTeamMembers->each(function ($user) use ($betaTeam) {
-            $user->teams()->attach($betaTeam->id);
+            $user->teams()->syncWithoutDetaching([$betaTeam->id]);
         });
     }
 }

@@ -19,21 +19,27 @@ class UserSeeder extends Seeder
         $organization = Organization::where('name', 'Foxtrot Organization')->first();
 
         // Create main test user
-        User::create([
-            'name' => 'Jakus Allof',
-            'email' => 'test@example.com',
-            'password' => Hash::make('2TgvL8VDJkY53KE'),
-            'organization_id' => $organization->id,
-            'user_type' => UserType::ADMIN,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Jakus Allof',
+                'email' => 'test@example.com',
+                'password' => Hash::make('2TgvL8VDJkY53KE'),
+                'organization_id' => $organization->id,
+                'user_type' => UserType::ADMIN,
+            ]
+        );
 
         // Create admin user
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('2TgvL8VDJkY53KE'),
-            'organization_id' => $organization->id,
-            'user_type' => UserType::ADMIN,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'email' => 'admin@example.com',
+                'password' => Hash::make('2TgvL8VDJkY53KE'),
+                'organization_id' => $organization->id,
+                'user_type' => UserType::ADMIN,
+            ]
+        );
     }
 }
