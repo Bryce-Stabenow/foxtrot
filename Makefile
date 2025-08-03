@@ -6,3 +6,6 @@ dbfreshseed:
 
 test:
 	php artisan test
+	
+tinker:
+	php artisan tinker

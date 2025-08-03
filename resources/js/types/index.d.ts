@@ -26,12 +26,18 @@ export interface SharedData extends PageProps {
     sidebarOpen: boolean;
 }
 
+export enum UserType {
+    ADMIN = 'admin',
+    MEMBER = 'member',
+}
+
 export interface User {
     id: number;
     name: string;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
+    user_type: UserType;
     created_at: string;
     updated_at: string;
 }

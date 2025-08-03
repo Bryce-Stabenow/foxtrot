@@ -3,10 +3,12 @@ import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { type NavItem, type SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
+import { LayoutGrid, Mail } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+
+const page = usePage<SharedData>();
 
 const mainNavItems: NavItem[] = [
     {
@@ -15,6 +17,15 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
 ];
+
+// Add invitations link for admin users
+if (page.props.auth.user?.user_type === 'admin') {
+    mainNavItems.push({
+        title: 'Invitations',
+        href: '/invitations',
+        icon: Mail,
+    });
+}
 
 const footerNavItems: NavItem[] = [];
 </script>
