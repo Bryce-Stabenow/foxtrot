@@ -45,9 +45,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                     v-for="team in teams" 
                     :key="team.id" 
                     :href="route('teams.show', team.id)"
-                    class="block transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
                 >
-                    <Card class="overflow-hidden">
+                    <Card class="overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:shadow-lg min-h-full">
                         <CardHeader>
                             <CardTitle>{{ team.name }}</CardTitle>
                             <CardDescription>{{ team.members.length }} members</CardDescription>

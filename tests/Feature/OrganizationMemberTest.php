@@ -146,7 +146,107 @@ test('admin cannot remove member from team not assigned', function () {
     $response->assertSee('Member is not assigned to this team.');
 });
 
-test('admin cannot manage members from different organization', function () {
+test('admin cannot remove member from team twice', function () {
+    $organization = Organization::factory()->create();
+    $admin = User::factory()->create([
+        'user_type' => UserType::ADMIN,
+        'organization_id' => $organization->id,
+    ]);
+    $member = User::factory()->create([
+        'user_type' => UserType::MEMBER,
+        'organization_id' => $organization->id,
+    ]);
+    $team = Team::factory()->create(['organization_id' => $organization->id]);
+
+    $response = actingAs($admin)->delete(route('organization.members.remove-from-team', [
+        'member' => $member->id,
+        'team' => $team->id
+    ]));
+
+    $response->assertStatus(400);
+    $response->assertSee('Member is not assigned to this team.');
+});
+
+test('admin can delete member with no team assignments', function () {
+    $organization = Organization::factory()->create();
+    $admin = User::factory()->create([
+        'user_type' => UserType::ADMIN,
+        'organization_id' => $organization->id,
+    ]);
+    $member = User::factory()->create([
+        'user_type' => UserType::MEMBER,
+        'organization_id' => $organization->id,
+    ]);
+
+    $response = actingAs($admin)->delete(route('organization.members.destroy', [
+        'member' => $member->id
+    ]));
+
+    $response->assertRedirect();
+    $response->assertSessionHas('success', 'Member deleted successfully.');
+    expect(User::find($member->id))->toBeNull();
+});
+
+test('admin cannot delete member with team assignments', function () {
+    $organization = Organization::factory()->create();
+    $admin = User::factory()->create([
+        'user_type' => UserType::ADMIN,
+        'organization_id' => $organization->id,
+    ]);
+    $member = User::factory()->create([
+        'user_type' => UserType::MEMBER,
+        'organization_id' => $organization->id,
+    ]);
+    $team = Team::factory()->create(['organization_id' => $organization->id]);
+    
+    // Assign member to team
+    $member->teams()->attach($team->id);
+
+    $response = actingAs($admin)->delete(route('organization.members.destroy', [
+        'member' => $member->id
+    ]));
+
+    $response->assertStatus(400);
+    $response->assertSee('Cannot delete members who are assigned to teams. Please remove them from all teams first.');
+    expect(User::find($member->id))->not->toBeNull();
+});
+
+test('admin cannot delete themselves', function () {
+    $organization = Organization::factory()->create();
+    $admin = User::factory()->create([
+        'user_type' => UserType::ADMIN,
+        'organization_id' => $organization->id,
+    ]);
+
+    $response = actingAs($admin)->delete(route('organization.members.destroy', [
+        'member' => $admin->id
+    ]));
+
+    $response->assertStatus(400);
+    $response->assertSee('You cannot delete your own account.');
+    expect(User::find($admin->id))->not->toBeNull();
+});
+
+test('non admin cannot delete members', function () {
+    $organization = Organization::factory()->create();
+    $member = User::factory()->create([
+        'user_type' => UserType::MEMBER,
+        'organization_id' => $organization->id,
+    ]);
+    $otherMember = User::factory()->create([
+        'user_type' => UserType::MEMBER,
+        'organization_id' => $organization->id,
+    ]);
+
+    $response = actingAs($member)->delete(route('organization.members.destroy', [
+        'member' => $otherMember->id
+    ]));
+
+    $response->assertStatus(403);
+    expect(User::find($otherMember->id))->not->toBeNull();
+});
+
+test('admin cannot delete member from different organization', function () {
     $organization1 = Organization::factory()->create();
     $organization2 = Organization::factory()->create();
     $admin = User::factory()->create([
@@ -157,15 +257,13 @@ test('admin cannot manage members from different organization', function () {
         'user_type' => UserType::MEMBER,
         'organization_id' => $organization2->id,
     ]);
-    $team = Team::factory()->create(['organization_id' => $organization2->id]);
 
-    $response = actingAs($admin)->post(route('organization.members.assign-to-team', [
-        'member' => $member->id,
-        'team' => $team->id
+    $response = actingAs($admin)->delete(route('organization.members.destroy', [
+        'member' => $member->id
     ]));
 
     $response->assertStatus(403);
-    $response->assertSee('Unauthorized action.');
+    expect(User::find($member->id))->not->toBeNull();
 });
 
 test('members page shows all organization members', function () {

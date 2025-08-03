@@ -40,11 +40,26 @@
         <div class="flex gap-2">
           <Button 
             variant="outline" 
-            size="sm" 
+            size="sm"
             class="flex-1"
+            @click="viewDetails"
+          >
+            View Details
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
             @click="openAssignModal"
           >
             Manage Teams
+          </Button>
+          <Button 
+            v-if="member.teams.length === 0 && member.user_type !== 'admin'"
+            variant="destructive" 
+            size="sm"
+            @click="openDeleteModal"
+          >
+            Delete
           </Button>
         </div>
       </div>
@@ -112,6 +127,40 @@
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- Delete Confirmation Modal -->
+    <Dialog :open="showDeleteModal" @update:open="showDeleteModal = $event">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Delete Member</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete {{ member.name }}? This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div class="space-y-4">
+          <div class="rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
+            <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
+              <p class="font-medium">Warning</p>
+              <p class="text-sm">This will permanently delete the member and all their data.</p>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" @click="showDeleteModal = false">
+            Cancel
+          </Button>
+          <Button 
+            variant="destructive" 
+            @click="deleteMember"
+            :disabled="isDeleting"
+          >
+            {{ isDeleting ? 'Deleting...' : 'Delete Member' }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </Card>
 </template>
 
@@ -157,6 +206,8 @@ const props = defineProps<{
 
 const showAssignModal = ref(false);
 const isLoading = ref(false);
+const showDeleteModal = ref(false);
+const isDeleting = ref(false);
 
 const availableTeams = computed(() => {
   const memberTeamIds = props.member.teams.map(team => team.id);
@@ -201,5 +252,30 @@ const removeFromTeam = async (teamId: number) => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const openDeleteModal = () => {
+  showDeleteModal.value = true;
+};
+
+const deleteMember = async () => {
+  isDeleting.value = true;
+  
+  try {
+    await router.delete(route('organization.members.destroy', {
+      member: props.member.id
+    }));
+    
+    // The page will be refreshed automatically by Inertia
+    showDeleteModal.value = false;
+  } catch (error) {
+    console.error('Failed to delete member:', error);
+  } finally {
+    isDeleting.value = false;
+  }
+};
+
+const viewDetails = () => {
+  router.visit(route('organization.members.show', { member: props.member.id }));
 };
 </script> 

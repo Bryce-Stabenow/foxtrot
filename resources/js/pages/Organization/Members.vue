@@ -42,8 +42,6 @@
               :member="member"
               :teams="teams"
               :current-user="currentUser"
-              @team-assigned="handleTeamAssigned"
-              @team-removed="handleTeamRemoved"
             />
           </div>
         </div>
@@ -153,23 +151,4 @@ const unassignedMembers = computed(() => {
     .filter(member => member.teams.length === 0)
     .sort((a, b) => a.name.localeCompare(b.name));
 });
-
-const handleTeamAssigned = (memberId: number, teamId: number) => {
-  // Update the member's teams in the local state
-  const member = props.members.find((m: Member) => m.id === memberId);
-  const team = props.teams.find((t: Team) => t.id === teamId);
-  
-  if (member && team) {
-    member.teams.push(team);
-  }
-};
-
-const handleTeamRemoved = (memberId: number, teamId: number) => {
-  // Remove the team from the member's teams in the local state
-  const member = props.members.find((m: Member) => m.id === memberId);
-  
-  if (member) {
-    member.teams = member.teams.filter((t: { id: number }) => t.id !== teamId);
-  }
-};
 </script> 

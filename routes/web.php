@@ -31,8 +31,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Organization members (admin only)
     Route::prefix('organization/members')->name('organization.members.')->group(function () {
         Route::get('/', [OrganizationMemberController::class, 'index'])->name('index');
+        Route::get('/{member}', [OrganizationMemberController::class, 'show'])->name('show');
         Route::post('/{member}/teams/{team}', [OrganizationMemberController::class, 'assignToTeam'])->name('assign-to-team');
         Route::delete('/{member}/teams/{team}', [OrganizationMemberController::class, 'removeFromTeam'])->name('remove-from-team');
+        Route::delete('/{member}', [OrganizationMemberController::class, 'destroy'])->name('destroy');
     });
 });
 
