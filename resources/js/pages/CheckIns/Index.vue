@@ -1,4 +1,5 @@
 <template>
+  <Head title="Check-ins" />
   <AppLayout>
     <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
       <!-- Header -->
@@ -332,6 +333,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import Button from '@/components/ui/button/Button.vue'
 import Icon from '@/components/Icon.vue'
 import type { CheckIn, Team, Stats, Filters } from '@/types'
+import { Head } from '@inertiajs/vue3'
 
 interface Props {
   checkIns: {

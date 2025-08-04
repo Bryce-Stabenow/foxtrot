@@ -3,9 +3,14 @@
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-      <h1 class="text-2xl font-semibold">Teams</h1>
-      
-      <div class="flex justify-end">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-semibold">Teams</h1>
+          <p class="mt-1 text-sm text-muted-foreground">
+            Manage your teams and team members
+          </p>
+        </div>
         <Button asChild>
           <Link :href="route('teams.create')">
             Create Team

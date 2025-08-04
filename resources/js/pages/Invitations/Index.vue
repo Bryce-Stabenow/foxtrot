@@ -1,4 +1,5 @@
 <template>
+  <Head title="Invitations" />
   <AppLayout>
     <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
       <!-- Header -->
@@ -10,7 +11,7 @@
       </div>
 
       <!-- Pending Invitations -->
-      <Card>
+      <Card class="bg-gray-100 dark:bg-gray-900">
         <CardHeader>
           <CardTitle>Pending Invitations</CardTitle>
           <CardDescription>
@@ -26,7 +27,7 @@
             <div
               v-for="invitation in pendingInvitations"
               :key="invitation.id"
-              class="flex items-center justify-between p-4 border rounded-lg"
+              class="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-950"
             >
               <div class="flex-1">
                 <div class="flex items-center space-x-3">
@@ -73,7 +74,7 @@
       </Card>
 
       <!-- Accepted Invitations -->
-      <Card class="my-8">
+      <Card class="my-8 bg-gray-100 dark:bg-gray-900">
         <CardHeader>
           <CardTitle>Accepted Invitations</CardTitle>
           <CardDescription>
@@ -89,7 +90,7 @@
             <div
               v-for="invitation in acceptedInvitations"
               :key="invitation.id"
-              class="flex items-center justify-between p-4 border rounded-lg"
+              class="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-950"
             >
               <div class="flex-1">
                 <div class="flex items-center space-x-3">
@@ -121,7 +122,7 @@
       </Card>
 
       <!-- Expired Invitations -->
-      <Card>
+      <Card class="bg-gray-100 dark:bg-gray-900">
         <CardHeader>
           <CardTitle>Expired Invitations</CardTitle>
           <CardDescription>
@@ -137,7 +138,7 @@
             <div
               v-for="invitation in expiredInvitations"
               :key="invitation.id"
-              class="flex items-center justify-between p-4 border rounded-lg"
+              class="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-950"
             >
               <div class="flex-1">
                 <div class="flex items-center space-x-3">
@@ -269,7 +270,7 @@
 
 <script setup lang="ts">
 import { ref, computed, type Ref } from 'vue'
-import { useForm, router } from '@inertiajs/vue3'
+import { useForm, router, Head } from '@inertiajs/vue3'
 import AppLayout from '@/layouts/AppLayout.vue'
 import Button from '@/components/ui/button/Button.vue'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

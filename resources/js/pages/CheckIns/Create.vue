@@ -1,4 +1,5 @@
 <template>
+  <Head title="Create Check-in" />
   <AppLayout>
     <template #header>
       <div class="flex items-center justify-between">
@@ -146,7 +147,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Link, useForm } from '@inertiajs/vue3'
+import { Link, useForm, Head } from '@inertiajs/vue3'
 import AppLayout from '@/layouts/AppLayout.vue'
 import type { Team, User } from '@/types'
 

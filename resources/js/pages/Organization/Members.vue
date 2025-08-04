@@ -18,7 +18,7 @@
             <h2 class="text-lg font-medium">{{ teamGroup.teamName }}</h2>
             <Badge variant="secondary" class="text-xs">{{ teamGroup.members.length }} members</Badge>
           </div>
-          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
             <MemberCard 
               v-for="member in teamGroup.members" 
               :key="member.id" 
@@ -33,9 +33,8 @@
         <div v-if="unassignedMembers.length > 0" class="space-y-4">
           <div class="flex items-center gap-2">
             <h2 class="text-lg font-medium text-muted-foreground">Unassigned Members</h2>
-            <Badge variant="outline" class="text-xs">{{ unassignedMembers.length }} members</Badge>
           </div>
-          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 rounded-xl bg-gray-100 p-4 dark:bg-gray-900">
             <MemberCard 
               v-for="member in unassignedMembers" 
               :key="member.id" 

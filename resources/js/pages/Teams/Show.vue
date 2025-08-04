@@ -1,51 +1,17 @@
-<script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem, type SharedData, type TeamWithMembers } from '@/types';
-import { UserType } from '@/types/enums';
-import { Head, usePage, router } from '@inertiajs/vue3';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { getInitials } from '@/composables/useInitials';
-import { computed } from 'vue';
-import { hasAdminPermissions } from '@/lib/utils';
-
-defineProps<{
-    team: TeamWithMembers;
-}>();
-
-const page = usePage<SharedData>();
-const currentUser = computed(() => page.props.auth.user);
-
-const isAdmin = computed(() => hasAdminPermissions(currentUser.value.user_type));
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Teams',
-        href: '/teams',
-    },
-    {
-        title: 'Team Details',
-        href: '#',
-    },
-];
-
-const viewUserDetails = (userId: number) => {
-    router.visit(route('organization.members.show', { member: userId }));
-};
-</script>
-
 <template>
     <Head :title="team.name" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <Card>
-                <CardHeader>
-                    <CardTitle>{{ team.name }}</CardTitle>
-                    <CardDescription>{{ team.members.length }} members</CardDescription>
-                </CardHeader>
-            </Card>
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold">{{ team.name }}</h1>
+                    <p class="mt-1 text-sm text-muted-foreground">
+                        {{ team.members.length }} members
+                    </p>
+                </div>
+            </div>
 
             <Card>
                 <CardHeader>
@@ -92,3 +58,39 @@ const viewUserDetails = (userId: number) => {
         </div>
     </AppLayout>
 </template> 
+
+<script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+import { type BreadcrumbItem, type SharedData, type TeamWithMembers } from '@/types';
+import { Head, usePage, router } from '@inertiajs/vue3';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { getInitials } from '@/composables/useInitials';
+import { computed } from 'vue';
+import { hasAdminPermissions } from '@/lib/utils';
+
+defineProps<{
+    team: TeamWithMembers;
+}>();
+
+const page = usePage<SharedData>();
+const currentUser = computed(() => page.props.auth.user);
+
+const isAdmin = computed(() => hasAdminPermissions(currentUser.value.user_type));
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Teams',
+        href: '/teams',
+    },
+    {
+        title: 'Team Details',
+        href: '#',
+    },
+];
+
+const viewUserDetails = (userId: number) => {
+    router.visit(route('organization.members.show', { member: userId }));
+};
+</script>

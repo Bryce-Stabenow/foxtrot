@@ -1,4 +1,5 @@
 <template>
+  <Head :title="`Check-in: ${checkIn.title}`" />
   <AppLayout>
     <template #header>
       <div class="flex items-center justify-between">
@@ -238,7 +239,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Link, useForm, router } from '@inertiajs/vue3'
+import { Link, useForm, router, Head } from '@inertiajs/vue3'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import AppLayout from '@/layouts/AppLayout.vue'
 import Icon from '@/components/Icon.vue'

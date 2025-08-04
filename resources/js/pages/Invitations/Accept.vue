@@ -1,4 +1,5 @@
 <template>
+  <Head title="Accept Invitation" />
   <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div class="text-center">
@@ -102,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3'
+import { useForm, Head } from '@inertiajs/vue3'
 import Button from '@/components/ui/button/Button.vue'
 import { Card, CardContent } from '@/components/ui/card'
 import Input from '@/components/ui/input/Input.vue'
