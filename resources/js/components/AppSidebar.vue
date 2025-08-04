@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Mail, Users } from 'lucide-vue-next';
+import { LayoutGrid, Mail, Users, CheckSquare } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { hasAdminPermissions } from '@/lib/utils';
 
@@ -17,20 +17,24 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    {
+        title: 'Check-ins',
+        href: '/check-ins',
+        icon: CheckSquare,
+    },
 ];
 
 // Add invitations link for admin users
 if (page.props.auth.user?.user_type && hasAdminPermissions(page.props.auth.user.user_type)) {
     mainNavItems.push({
-        title: 'Invitations',
-        href: '/invitations',
-        icon: Mail,
-    });
-    
-    mainNavItems.push({
         title: 'Members',
         href: '/organization/members',
         icon: Users,
+    });
+    mainNavItems.push({
+        title: 'Invitations',
+        href: '/invitations',
+        icon: Mail,
     });
 }
 

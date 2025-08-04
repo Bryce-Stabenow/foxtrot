@@ -112,4 +112,44 @@ export interface TeamGroup {
     members: Member[];
 }
 
+export interface CheckIn {
+    id: number;
+    title: string;
+    description: string;
+    status: string;
+    scheduled_date: string;
+    completed_at: string | null;
+    created_at: string;
+    notes: string | null;
+    is_overdue: boolean;
+    team_id: number;
+    assigned_user_id: number;
+    assigned_user: {
+        name: string;
+    };
+    team: {
+        name: string;
+    };
+    created_by: {
+        name: string;
+    };
+}
+
+export interface Stats {
+    total: number;
+    pending: number;
+    in_progress: number;
+    completed: number;
+    overdue: number;
+    completion_rate: number;
+}
+
+export interface Filters {
+    status: string;
+    team_id: string;
+    search: string;
+    sort_by: string;
+    sort_direction: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

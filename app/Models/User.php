@@ -88,4 +88,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(OrganizationInvitation::class, 'invited_by_user_id');
     }
+
+    /**
+     * The check-ins assigned to the user.
+     */
+    public function assignedCheckIns(): HasMany
+    {
+        return $this->hasMany(CheckIn::class, 'assigned_user_id');
+    }
+
+    /**
+     * The check-ins created by the user.
+     */
+    public function createdCheckIns(): HasMany
+    {
+        return $this->hasMany(CheckIn::class, 'created_by_user_id');
+    }
 }
