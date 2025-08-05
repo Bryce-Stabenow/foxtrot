@@ -1,8 +1,7 @@
 <template>
   <Head :title="`Check-in: ${checkIn.title}`" />
   <AppLayout>
-    <template #header>
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between p-4">
         <div>
           <h1 class="text-2xl font-semibold text-gray-900">{{ checkIn.title }}</h1>
           <p class="mt-1 text-sm text-gray-600">
@@ -14,7 +13,7 @@
             :href="route('check-ins.index')"
             class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Back to Check-ins
+            View all Check-ins
           </Link>
           <Link
             v-if="canEdit"
@@ -25,9 +24,8 @@
           </Link>
         </div>
       </div>
-    </template>
 
-    <div class="max-w-4xl mx-auto">
+    <div class="px-4">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
         <div class="lg:col-span-2">

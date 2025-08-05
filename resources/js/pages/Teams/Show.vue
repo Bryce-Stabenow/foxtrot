@@ -13,6 +13,39 @@
                 </div>
             </div>
 
+            <!-- Recent Check-ins -->
+            <Card>
+                <CardHeader>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <CardTitle>Recent Check-ins</CardTitle>
+                            <CardDescription>Recently completed check-ins for this team</CardDescription>
+                        </div>
+                        <Button 
+                            variant="outline" 
+                            size="sm"
+                            @click="viewAllCheckIns"
+                        >
+                            View All Check-ins
+                        </Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div v-if="recentCheckIns.length > 0" class="divide-y">
+                        <CheckInListItem
+                            v-for="checkIn in recentCheckIns"
+                            :key="checkIn.id"
+                            :check-in="checkIn"
+                            :can-edit="canEdit"
+                            :format-date="formatDate"
+                        />
+                    </div>
+                    <div v-else class="text-center py-8">
+                        <p class="text-sm text-muted-foreground">No completed check-ins yet</p>
+                    </div>
+                </CardContent>
+            </Card>
+
             <Card>
                 <CardHeader>
                     <CardTitle>Team Members</CardTitle>
@@ -61,17 +94,19 @@
 
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem, type SharedData, type TeamWithMembers } from '@/types';
+import { type BreadcrumbItem, type SharedData, type TeamWithMembers, type CheckIn } from '@/types';
 import { Head, usePage, router } from '@inertiajs/vue3';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import CheckInListItem from '@/components/CheckInListItem.vue';
 import { getInitials } from '@/composables/useInitials';
 import { computed } from 'vue';
 import { hasAdminPermissions } from '@/lib/utils';
 
-defineProps<{
+const props = defineProps<{
     team: TeamWithMembers;
+    recentCheckIns: CheckIn[];
 }>();
 
 const page = usePage<SharedData>();
@@ -90,7 +125,25 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const formatDate = (date: string | null) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString();
+};
+
+const canEdit = (checkIn: CheckIn) => {
+    // TODO This should check user permissions - for now, allow admin users to edit
+    return isAdmin.value;
+};
+
 const viewUserDetails = (userId: number) => {
     router.visit(route('organization.members.show', { member: userId }));
+};
+
+const viewAllCheckIns = () => {
+    router.visit(route('check-ins.index', { team_id: props.team.id }));
+};
+
+const viewCheckIn = (checkInId: number) => {
+    router.visit(route('check-ins.show', { checkIn: checkInId }));
 };
 </script>

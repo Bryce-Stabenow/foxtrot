@@ -1,25 +1,18 @@
 <template>
   <Head title="Edit Check-in" />
   <AppLayout>
-    <template #header>
-      <div class="flex items-center justify-between">
+    <div class="p-4">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
         <div>
           <h1 class="text-2xl font-semibold text-gray-900">Edit Check-in</h1>
           <p class="mt-1 text-sm text-gray-600">
             Update check-in details
           </p>
         </div>
-        <Link
-          :href="route('check-ins.show', checkIn.id)"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Back to Check-in
-        </Link>
       </div>
-    </template>
 
-    <div class="max-w-2xl mx-auto">
-      <form @submit.prevent="submit" class="space-y-6">
+      <form @submit.prevent="submit" class="space-y-6 max-w-2xl mx-auto">
         <div class="bg-white shadow sm:rounded-lg">
           <div class="px-4 py-5 sm:p-6">
             <!-- Title -->

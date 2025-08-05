@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Enums\CheckInStatus;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,17 @@ class TeamController extends Controller
     {
         $this->authorize('view', $team);
 
+        // Get recent completed check-ins for this team
+        $recentCheckIns = $team->checkIns()
+            ->where('status', CheckInStatus::COMPLETED)
+            ->with(['assignedUser', 'createdBy', 'team'])
+            ->orderBy('completed_at', 'desc')
+            ->limit(5)
+            ->get();
+
         return Inertia::render('Teams/Show', [
             'team' => $team->load('members'),
+            'recentCheckIns' => $recentCheckIns,
         ]);
     }
 

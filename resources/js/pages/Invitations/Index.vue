@@ -11,7 +11,7 @@
       </div>
 
       <!-- Pending Invitations -->
-      <Card class="bg-gray-100 dark:bg-gray-900">
+      <Card>
         <CardHeader>
           <CardTitle>Pending Invitations</CardTitle>
           <CardDescription>
@@ -27,7 +27,7 @@
             <div
               v-for="invitation in pendingInvitations"
               :key="invitation.id"
-              class="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-950"
+              class="flex items-center justify-between p-4 border rounded-lg"
             >
               <div class="flex-1">
                 <div class="flex items-center space-x-3">
@@ -74,7 +74,7 @@
       </Card>
 
       <!-- Accepted Invitations -->
-      <Card class="my-8 bg-gray-100 dark:bg-gray-900">
+      <Card class="my-8">
         <CardHeader>
           <CardTitle>Accepted Invitations</CardTitle>
           <CardDescription>
@@ -90,7 +90,7 @@
             <div
               v-for="invitation in acceptedInvitations"
               :key="invitation.id"
-              class="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-950"
+              class="flex items-center justify-between p-4 border rounded-lg"
             >
               <div class="flex-1">
                 <div class="flex items-center space-x-3">
@@ -122,7 +122,7 @@
       </Card>
 
       <!-- Expired Invitations -->
-      <Card class="bg-gray-100 dark:bg-gray-900">
+      <Card>
         <CardHeader>
           <CardTitle>Expired Invitations</CardTitle>
           <CardDescription>
@@ -138,7 +138,7 @@
             <div
               v-for="invitation in expiredInvitations"
               :key="invitation.id"
-              class="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-950"
+              class="flex items-center justify-between p-4 border rounded-lg"
             >
               <div class="flex-1">
                 <div class="flex items-center space-x-3">
